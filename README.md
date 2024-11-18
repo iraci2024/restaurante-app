@@ -1,70 +1,124 @@
-# Getting Started with Create React App
+# Restaurante App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Este é um aplicativo web completo para gerenciamento de restaurantes, incluindo um frontend em React, um backend em Node.js com Express, e um banco de dados MongoDB.
 
-## Available Scripts
+## Pré-requisitos
 
-In the project directory, you can run:
+Antes de começar, certifique-se de ter instalado em sua máquina:
 
-### `npm start`
+- Node.js (versão 14 ou superior)
+- npm (geralmente vem com o Node.js)
+- MongoDB
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Configuração do Banco de Dados
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+1. Instale o MongoDB em sua máquina, se ainda não tiver instalado.
+2. Inicie o serviço MongoDB:
+   ```
+   sudo service mongod start
+   ```
+3. Verifique se o MongoDB está rodando:
+   ```
+   mongo
+   ```
+   Se conseguir entrar no shell do MongoDB, está funcionando corretamente.
 
-### `npm test`
+## Configuração do Backend
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. Navegue até a pasta do backend:
+   ```
+   cd /caminho/para/restaurante-app/backend
+   ```
 
-### `npm run build`
+2. Instale as dependências:
+   ```
+   npm install
+   ```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+3. Crie um arquivo `.env` na pasta `backend` com o seguinte conteúdo:
+   ```
+   MONGODB_URI=mongodb://localhost:27017/restaurante-app
+   JWT_SECRET=seu_segredo_jwt
+   PORT=5000
+   ```
+   Substitua `seu_segredo_jwt` por uma string aleatória para ser usada como chave de criptografia.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+4. Inicie o servidor backend:
+   ```
+   npm start
+   ```
+   O servidor deve iniciar na porta 5000.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Configuração do Frontend
 
-### `npm run eject`
+1. Navegue até a pasta principal do projeto:
+   ```
+   cd /caminho/para/restaurante-app
+   ```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+2. Instale as dependências:
+   ```
+   npm install
+   ```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+3. Inicie o servidor de desenvolvimento do React:
+   ```
+   npm start
+   ```
+   O aplicativo deve abrir automaticamente em seu navegador padrão. Se não abrir, acesse `http://localhost:3000`.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Uso do Aplicativo
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+1. Registro de Usuário:
+   - Clique em "Cadastrar" na página inicial.
+   - Preencha o formulário com suas informações.
+   - Clique em "Cadastrar" para criar sua conta.
 
-## Learn More
+2. Login:
+   - Após o registro, você será redirecionado para a página de login.
+   - Insira seu email e senha.
+   - Clique em "Entrar".
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+3. Visualização do Cardápio:
+   - Após o login, você verá o cardápio na página principal.
+   - Você pode adicionar itens ao carrinho clicando em "Adicionar ao Carrinho".
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+4. Finalizar Pedido:
+   - Vá para o carrinho clicando em "Carrinho" no menu superior.
+   - Revise seus itens e clique em "Finalizar Pedido".
+   - Confirme seu pedido na tela de checkout.
 
-### Code Splitting
+5. Visualizar Pedidos:
+   - Clique em "Meus Pedidos" no menu superior para ver seus pedidos anteriores.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+6. Painel de Administração (apenas para usuários admin):
+   - Se sua conta for de administrador, você verá uma opção "Admin" no menu superior.
+   - No painel de administração, você pode gerenciar o cardápio e visualizar todos os pedidos.
 
-### Analyzing the Bundle Size
+## Desenvolvimento
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Para continuar o desenvolvimento deste projeto:
 
-### Making a Progressive Web App
+1. Clone o repositório:
+   ```
+   git clone https://github.com/iraci2024/restaurante-app.git
+   ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+2. Siga as etapas de configuração do backend e frontend mencionadas acima.
 
-### Advanced Configuration
+3. Faça suas alterações no código.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+4. Teste suas alterações localmente.
 
-### Deployment
+5. Commit e push suas alterações:
+   ```
+   git add .
+   git commit -m "Descrição das suas alterações"
+   git push origin master
+   ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## Suporte
 
-### `npm run build` fails to minify
+Se você encontrar algum problema ou tiver alguma dúvida, por favor, abra uma issue no GitHub.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Boa sorte com seu projeto de restaurante!
