@@ -1,18 +1,61 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import api from '../api/axios';
 
-const AdminPanel = ({ menu, setMenu, orders }) => {
-  const [newItem, setNewItem] = useState({ name: '', price: '' });
+const AdminPanel = () => {
+  const [menu, setMenu] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [newItem, setNewItem] = useState({ name: '', price: '', description: '', category: '' });
 
-  const handleAddItem = (e) => {
-    e.preventDefault();
-    if (newItem.name && newItem.price) {
-      setMenu([...menu, { ...newItem, id: Date.now(), price: parseFloat(newItem.price) }]);
-      setNewItem({ name: '', price: '' });
+  useEffect(() => {
+    fetchMenu();
+    fetchOrders();
+  }, []);
+
+  const fetchMenu = async () => {
+    try {
+      const response = await api.get('/menu-items');
+      setMenu(response.data);
+    } catch (error) {
+      console.error('Erro ao buscar o menu:', error);
     }
   };
 
-  const handleRemoveItem = (id) => {
-    setMenu(menu.filter(item => item.id !== id));
+  const fetchOrders = async () => {
+    try {
+      const response = await api.get('/orders');
+      setOrders(response.data);
+    } catch (error) {
+      console.error('Erro ao buscar os pedidos:', error);
+    }
+  };
+
+  const handleAddItem = async (e) => {
+    e.preventDefault();
+    try {
+      await api.post('/menu-items', newItem);
+      setNewItem({ name: '', price: '', description: '', category: '' });
+      fetchMenu();
+    } catch (error) {
+      console.error('Erro ao adicionar item:', error);
+    }
+  };
+
+  const handleRemoveItem = async (id) => {
+    try {
+      await api.delete(`/menu-items/${id}`);
+      fetchMenu();
+    } catch (error) {
+      console.error('Erro ao remover item:', error);
+    }
+  };
+
+  const handleUpdateOrderStatus = async (id, status) => {
+    try {
+      await api.put(`/orders/${id}`, { status });
+      fetchOrders();
+    } catch (error) {
+      console.error('Erro ao atualizar status do pedido:', error);
+    }
   };
 
   return (
@@ -36,16 +79,30 @@ const AdminPanel = ({ menu, setMenu, orders }) => {
             onChange={(e) => setNewItem({ ...newItem, price: e.target.value })}
             className="shadow appearance-none border rounded w-full sm:w-auto flex-grow sm:flex-grow-0 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-2 mb-2 sm:mb-0"
           />
+          <input
+            type="text"
+            placeholder="Descrição"
+            value={newItem.description}
+            onChange={(e) => setNewItem({ ...newItem, description: e.target.value })}
+            className="shadow appearance-none border rounded w-full sm:w-auto flex-grow sm:flex-grow-0 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-2 mb-2 sm:mb-0"
+          />
+          <input
+            type="text"
+            placeholder="Categoria"
+            value={newItem.category}
+            onChange={(e) => setNewItem({ ...newItem, category: e.target.value })}
+            className="shadow appearance-none border rounded w-full sm:w-auto flex-grow sm:flex-grow-0 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-2 mb-2 sm:mb-0"
+          />
           <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline btn">
             Adicionar Item
           </button>
         </form>
         <ul>
           {menu.map((item) => (
-            <li key={item.id} className="mb-2 flex justify-between items-center">
+            <li key={item._id} className="mb-2 flex justify-between items-center">
               <span>{item.name} - R$ {item.price.toFixed(2)}</span>
               <button
-                onClick={() => handleRemoveItem(item.id)}
+                onClick={() => handleRemoveItem(item._id)}
                 className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline btn"
               >
                 Remover
@@ -61,18 +118,33 @@ const AdminPanel = ({ menu, setMenu, orders }) => {
           <p>Nenhum pedido no momento.</p>
         ) : (
           <ul>
-            {orders.map((order, index) => (
-              <li key={index} className="mb-4 p-4 border rounded bg-gray-50">
-                <p className="font-semibold">Pedido #{index + 1}</p>
-                <p>Cliente: {order.user.email}</p>
+            {orders.map((order) => (
+              <li key={order._id} className="mb-4 p-4 border rounded bg-gray-50">
+                <p className="font-semibold">Pedido #{order._id}</p>
+                <p>Cliente: {order.user.name}</p>
                 <ul className="ml-4">
-                  {order.items.map((item, itemIndex) => (
-                    <li key={itemIndex}>
-                      {item.name} - {item.quantity}x - R$ {(item.price * item.quantity).toFixed(2)}
+                  {order.items.map((item, index) => (
+                    <li key={index}>
+                      {item.menuItem.name} - {item.quantity}x - R$ {(item.price * item.quantity).toFixed(2)}
                     </li>
                   ))}
                 </ul>
                 <p className="font-semibold mt-2">Total: R$ {order.total.toFixed(2)}</p>
+                <p>Status: {order.status}</p>
+                <div className="mt-2">
+                  <button
+                    onClick={() => handleUpdateOrderStatus(order._id, 'preparando')}
+                    className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-2 rounded mr-2"
+                  >
+                    Preparando
+                  </button>
+                  <button
+                    onClick={() => handleUpdateOrderStatus(order._id, 'entregue')}
+                    className="bg-green-500 hover:bg-green-600 text-white font-bold py-1 px-2 rounded"
+                  >
+                    Entregue
+                  </button>
+                </div>
               </li>
             ))}
           </ul>
